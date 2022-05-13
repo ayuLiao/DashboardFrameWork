@@ -13,4 +13,20 @@ export default {
       data: params,
     });
   },
+  noticeCount(params) {
+    return request({
+      url: "/leave/count",
+      method: "get",
+      data: {},
+      // 局部是否使用mock
+      mock: true,
+    });
+  },
+  getMenuList(params) {
+    return request({
+      url: "/menu/list",
+      method: "get",
+      data: params,
+    });
+  },
 };

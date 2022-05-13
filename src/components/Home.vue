@@ -1,4 +1,41 @@
-<script setup></script>
+<script setup>
+import { onMounted, reactive, ref } from "vue";
+import api from "../api";
+import router from "../router";
+import store from "../store";
+import TreeMenu from "./TreeMenu.vue";
+
+
+let userInfo = reactive(store.state.userInfo);
+
+let noticeCount = ref(0);
+let menuList = reactive({
+    data: []
+});
+let activeMenu = location.hash.slice(1);
+
+async function getNoticeCount() {
+  const count = await api.noticeCount();
+  noticeCount.value = count;
+}
+
+async function getMenuList() {
+  const list = await api.getMenuList();
+  menuList.data = list;
+}
+
+function handleLogout() {
+  if (key == "email") return;
+  store.commit("saveUserInfo", "");
+  userInfo = {};
+  router.push("/login");
+}
+
+onMounted(() => {
+  getNoticeCount();
+  getMenuList();
+});
+</script>
 
 <template>
   <div class="basic-layout">
@@ -14,25 +51,40 @@
         background-color="#001529"
         text-color="#fff"
         router
-      ></el-menu>
+      >
+        <TreeMenu :menuList="menuList.data" />
+      </el-menu>
     </div>
     <div class="content-right">
       <div class="nav-top">
         <div class="nav-left">
-          <div class="menu-fold" @click="toggle">
-            <i class="el-icon-s-fold"></i>
-          </div>
+     
           <div class="bread">面包屑</div>
         </div>
         <div class="user-info">
-            用户信息
           <!-- 信息红点通知 -->
           <el-badge
             :is-dot="noticeCount > 0 ? true : false"
             class="notice"
             type="danger"
           >
+            <el-icon><bell /></el-icon>
           </el-badge>
+          <!-- command 点击菜单项触发的事件回调 -->
+          <el-dropdown @command="handleLogout">
+            <span class="user-link">
+              {{ userInfo.userName }}
+              <i class="el-icon--right"></i>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="email"
+                  >邮箱：{{ userInfo.userEmail }}</el-dropdown-item
+                >
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
       <div class="wrapper">

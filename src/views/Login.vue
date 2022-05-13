@@ -3,7 +3,9 @@
 // https://penueling.com/%E6%8A%80%E8%A1%93%E7%AD%86%E8%A8%98/vue3-elementui-plus-%E8%A1%A8%E5%96%AE%E9%A9%97%E8%AD%89%E4%BD%BF%E7%94%A8-refs/
 
 import { reactive, ref, getCurrentInstance  } from 'vue';
-const { proxy } = getCurrentInstance() 
+import api from '../api';
+import router from '../router';
+import store from '../store';
 
 const user = reactive({
   userName: "",
@@ -32,9 +34,9 @@ const rules = {
  function login() {
       userForm.value.validate((valid) => {
         if (valid) {
-          proxy.$api.login(user).then((res) => {
-            proxy.$store.commit("saveUserInfo", res);
-            proxy.$router.push("/welcome");
+          api.login(user).then((res) => {
+            store.commit("saveUserInfo", res);
+            router.push("/welcome");
           });
         } else {
           return false;
@@ -54,14 +56,14 @@ const rules = {
         <el-form-item prop="userName">
           <el-input
             type="text"
-            prefix-icon="el-icon-user"
+            prefix-icon="user"
             v-model="user.userName"
           />
         </el-form-item>
         <el-form-item prop="userPwd">
           <el-input
             type="password"
-            prefix-icon="el-icon-view"
+            prefix-icon="view"
             v-model="user.userPwd"
           />
         </el-form-item>
