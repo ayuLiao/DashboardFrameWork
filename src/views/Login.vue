@@ -7,13 +7,16 @@ import api from '../api';
 import router from '../router';
 import store from '../store';
 
+// 表单提交数据
 const user = reactive({
   userName: "",
   userPwd: ""
 })
 
+// 表单对象
 const userForm = ref();
 
+// 校验规则
 const rules = {
     userName: [
       {
@@ -31,18 +34,20 @@ const rules = {
     ],
 }
 
- function login() {
-      userForm.value.validate((valid) => {
-        if (valid) {
-          api.login(user).then((res) => {
-            store.commit("saveUserInfo", res);
-            router.push("/welcome");
-          });
-        } else {
-          return false;
-        }
+// 登陆方法
+function login() {
+  // 通过userForm表单对象调用validate方法，实现前端校验
+  userForm.value.validate((valid) => {
+    if (valid) {
+      api.login(user).then((res) => {
+        store.commit("saveUserInfo", res);
+        router.push("/welcome");
       });
+    } else {
+      return false;
     }
+  });
+}
 
 </script>
 

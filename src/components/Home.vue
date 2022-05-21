@@ -4,13 +4,13 @@ import api from "../api";
 import router from "../router";
 import store from "../store";
 import TreeMenu from "./TreeMenu.vue";
-
+import BreadCrumb from "./BreadCrumb.vue";
 
 let userInfo = reactive(store.state.userInfo);
 
 let noticeCount = ref(0);
 let menuList = reactive({
-    data: []
+  data: [],
 });
 let activeMenu = location.hash.slice(1);
 
@@ -58,8 +58,9 @@ onMounted(() => {
     <div class="content-right">
       <div class="nav-top">
         <div class="nav-left">
-     
-          <div class="bread">面包屑</div>
+          <div class="bread">
+            <BreadCrumb />
+          </div>
         </div>
         <div class="user-info">
           <!-- 信息红点通知 -->
@@ -74,7 +75,7 @@ onMounted(() => {
           <el-dropdown @command="handleLogout">
             <span class="user-link">
               {{ userInfo.userName }}
-              <i class="el-icon--right"></i>
+              <el-icon><right /></el-icon>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -152,6 +153,8 @@ onMounted(() => {
       }
 
       .user-info {
+        display: flex;
+        align-items: center;
         .notice {
           line-height: 30px;
           margin-right: 15px;
